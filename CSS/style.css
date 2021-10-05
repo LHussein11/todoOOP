@@ -1,0 +1,53 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    height: 100%;
+  }
+  
+  .container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .resultWrapper,
+  .inputWrapper {
+    width: 40%
+  }
+
+  .input{
+      width: 70%;
+  }
+
+  .btnInput {
+      width: 30%;
+  }
+
+  main {
+      width: 100%;
+  }
+  
+  .resultWrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .inputWrapper {
+      display: flex;
+      justify-content: space-between;
+  }
+  
+  .item {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .fa-trash {
+      cursor: pointer;
+  }
