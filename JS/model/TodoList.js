@@ -1,3 +1,5 @@
+import { Task } from './Task.js';
+
 export class TodoList {
     constructor() {
         this.tasks = [];
@@ -11,10 +13,12 @@ export class TodoList {
         return this.tasks;
     }
 
-    add(task) {
+    add(value) {
         const tasks = JSON.parse(localStorage.getItem('items')) || [];
+        const task = new Task(value);
         tasks.push(task);
         localStorage.setItem('items', JSON.stringify(tasks));
+        return task;
     }
 
     deleteAll() {

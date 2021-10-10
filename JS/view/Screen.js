@@ -36,14 +36,15 @@ export class Screen {
         });
     }
 
-    renderItem(item = this.input.value) {
-        if (!item.trim()) {
+    renderItem(task) {
+        const value = task ? task.value : this.input.value;
+        if (!value.trim()) {
             return;
         }
 
         const element = `
         <div class="item">
-          <p>${item}</p>
+          <p>${value}</p>
           <i class="fas fa-trash"></i>
         </div>
       `;

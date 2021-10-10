@@ -13,9 +13,9 @@ export class TodoController {
 
     onButtonAddClick() {
         const input = this.screen.getInput();
-        this.list.add(input);
+        const task = this.list.add(input);
         this.screen.clearInput();
-        this.screen.renderItem(input);
+        this.screen.renderItem(task);
     }
 
     onButtonDeleteClick() {
