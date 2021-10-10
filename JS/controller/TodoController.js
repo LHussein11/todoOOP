@@ -8,14 +8,16 @@ export class TodoController {
     registerEventListeners() {
         this.screen.subscribe('click:btnAdd', () => this.onButtonAddClick());
         this.screen.subscribe('click:btnDelete', () => this.onButtonDeleteClick());
-        this.screen.subscribe('click:deleteSingle', (task, element) => this.onDeleteSingleClick(task, element));
+        this.screen.subscribe('click:deleteSingle', (id, element) => this.onDeleteSingleClick(id, element));
+        this.screen.subscribe('click:completed', (id, element) => this.toggleComplete(id, element));
+        this.screen.subscribe('click:not-completed', (id, element) => this.toggleComplete(id, element));
     }
 
     onButtonAddClick() {
         const input = this.screen.getInput();
-        this.list.add(input);
+        const task = this.list.add(input);
         this.screen.clearInput();
-        this.screen.renderItem(input);
+        this.screen.renderItem(task);
     }
 
     onButtonDeleteClick() {
@@ -23,9 +25,14 @@ export class TodoController {
         this.list.deleteAll();
     }
 
-    onDeleteSingleClick(task, element) {
-        this.list.remove(task);
+    onDeleteSingleClick(id, element) {
+        this.list.remove(id);
         this.screen.deleteSingleElement(element);
+    }
+
+    toggleComplete(id, element) {
+        const task = this.list.toggleComplete(id);
+        this.screen.updateItem(element, task);
     }
 
     startApp() {

@@ -1,76 +1,105 @@
 export class Screen {
-    constructor() {
-        this.input = document.querySelector('.input');
-        this.btnAdd = document.querySelector('.btnInput');
-        this.main = document.querySelector('main');
-        this.btnDelete = document.querySelector('.btnDelete');
-        
-        this.subscribers = {};
-        
-        this.registerEventListeners();
+  constructor() {
+    this.input = document.querySelector('.input');
+    this.btnAdd = document.querySelector('.btnInput');
+    this.main = document.querySelector('main');
+    this.btnDelete = document.querySelector('.btnDelete');
+
+    this.subscribers = {};
+
+    this.registerEventListeners();
+  }
+
+  notifySubscribers(eventName, ...data) {
+    if (this.subscribers.hasOwnProperty(eventName)) {
+      this.subscribers[eventName].forEach((callback) => {
+        callback(...data);
+      });
     }
+  }
 
-    notifySubscribers(eventName, ...data) {
-        if (this.subscribers.hasOwnProperty(eventName)) {
-            this.subscribers[eventName].forEach((callback) => {
-                callback(...data);
-            });
-        }
+  subscribe(eventName, callback) {
+    if (this.subscribers.hasOwnProperty(eventName)) {
+      this.subscribers[eventName].push(callback);
+    } else {
+      this.subscribers[eventName] = [callback];
     }
+  }
 
-    subscribe(eventName, callback) {
-        if (this.subscribers.hasOwnProperty(eventName)) {
-            this.subscribers[eventName].push(callback);
-        } else {
-            this.subscribers[eventName] = [callback];
-        }
-    }
+  registerEventListeners() {
+    this.btnAdd.addEventListener('click', () => this.notifySubscribers('click:btnAdd'));
+    this.btnDelete.addEventListener('click', () => this.notifySubscribers('click:btnDelete'));
+    this.main.addEventListener('click', (event) => {
+      if (event.target.classList.contains('fa-trash')) {
+        this.notifySubscribers(
+          'click:deleteSingle',
+          Number(event.target.parentElement.dataset.id),
+          event.target.parentElement
+        );
+      }
 
-    registerEventListeners() {
-        this.btnAdd.addEventListener('click', () => this.notifySubscribers('click:btnAdd'));
-        this.btnDelete.addEventListener('click', () => this.notifySubscribers('click:btnDelete'));
-        this.main.addEventListener('click', (event) => {
-            if (event.target.classList.contains('fa-trash')) {
-                this.notifySubscribers('click:deleteSingle', event.target.previousElementSibling.innerText, event.target.parentElement);
-            }
-        });
-    }
+      if (event.target.classList.contains('completed')) {
+        this.notifySubscribers(
+          'click:completed',
+          Number(event.target.parentElement.parentElement.dataset.id),
+          event.target.parentElement.parentElement
+        );
+      }
 
-    renderItem(item = this.input.value) {
-        if (!item.trim()) {
-            return;
-        }
+      if (event.target.classList.contains('not-completed')) {
+        this.notifySubscribers(
+          'click:not-completed',
+          Number(event.target.parentElement.parentElement.dataset.id),
+          event.target.parentElement.parentElement
+        );
+      }
+    });
+  }
 
-        const element = `
-        <div class="item">
-          <p>${item}</p>
-          <i class="fas fa-trash"></i>
+  getTaskMarkup(task) {
+    const { value, id, completed } = task;
+    return `
+        <div class='item' data-id='${id}'>
+          <p>${value}
+            <span class='${completed ? 'completed' : 'not-completed'}'>${
+      completed ? 'Completed' : 'Not completed'
+    }</span>
+          </p>
+          <i class='fas fa-trash'></i>
         </div>
       `;
+  }
 
-      this.main.innerHTML += element;
-    }
+  renderItem(task) {
+    const markup = this.getTaskMarkup(task);
+    this.main.innerHTML += markup;
+  }
 
-    getInput() {
-        return this.input.value;
-    }
+  getInput() {
+    return this.input.value;
+  }
 
-    clearInput() {
-        this.input.value = '';
-    }
+  clearInput() {
+    this.input.value = '';
+  }
 
-    deleteAllElements() {
-        const arrChildren = Array.from(this.main.children);
-        arrChildren.forEach(child => {
-            child.remove();
-        })
-    }
+  deleteAllElements() {
+    const arrChildren = Array.from(this.main.children);
+    arrChildren.forEach((child) => {
+      child.remove();
+    });
+  }
 
-    deleteSingleElement(element) {
-        element.remove();
-    }
+  deleteSingleElement(element) {
+    element.remove();
+  }
 
-    showTasks(tasks) {
-        tasks.forEach(task => this.renderItem(task));
-    }
+  showTasks(tasks) {
+    tasks.forEach((task) => this.renderItem(task));
+  }
+
+  updateItem(element, task) {
+    const markup = this.getTaskMarkup(task);
+    element.innerHTML = markup;
+  }
 }

@@ -1,3 +1,5 @@
+import { Task } from './Task.js';
+
 export class TodoList {
     constructor() {
         this.tasks = [];
@@ -11,20 +13,33 @@ export class TodoList {
         return this.tasks;
     }
 
-    add(task) {
-        const tasks = JSON.parse(localStorage.getItem('items')) || [];
-        tasks.push(task);
+    setTasks(tasks) {
         localStorage.setItem('items', JSON.stringify(tasks));
+    }
+
+    add(value) {
+        const tasks = JSON.parse(localStorage.getItem('items')) || [];
+        const task = new Task(value);
+        tasks.push(task);
+        this.setTasks(tasks);
+        return task;
     }
 
     deleteAll() {
         localStorage.removeItem('items');
     }
     
-    remove(task) {
-        const tasks = JSON.parse(localStorage.getItem('items'));
-        const index = tasks.indexOf(task);
-        tasks.splice(index, 1);
-        localStorage.setItem('items', JSON.stringify(tasks));
+    remove(id) {
+        const tasks = this.getTasks()
+        .filter((task) => id !== task.id);
+        this.setTasks(tasks);
+    }
+
+    toggleComplete(id) {
+        const tasks = this.getTasks();
+        const task = tasks.find(task => id === task.id);
+        task.completed = !task.completed;
+        this.setTasks(tasks);
+        return task;
     }
 }
