@@ -51,3 +51,16 @@
   .fa-trash {
       cursor: pointer;
   }
+
+.completed,
+.not-completed {
+  font-size: 10px;
+}
+
+.completed {
+    color: green;
+}
+
+.not-completed {
+  color: red;
+}

@@ -13,11 +13,15 @@ export class TodoList {
         return this.tasks;
     }
 
+    setTasks(tasks) {
+        localStorage.setItem('items', JSON.stringify(tasks));
+    }
+
     add(value) {
         const tasks = JSON.parse(localStorage.getItem('items')) || [];
         const task = new Task(value);
         tasks.push(task);
-        localStorage.setItem('items', JSON.stringify(tasks));
+        this.setTasks(tasks);
         return task;
     }
 
@@ -26,9 +30,16 @@ export class TodoList {
     }
     
     remove(id) {
-        const tasks = 
-        JSON.parse(localStorage.getItem('items'))
+        const tasks = this.getTasks()
         .filter((task) => id !== task.id);
-        localStorage.setItem('items', JSON.stringify(tasks));
+        this.setTasks(tasks);
+    }
+
+    toggleComplete(id) {
+        const tasks = this.getTasks();
+        const task = tasks.find(task => id === task.id);
+        task.completed = !task.completed;
+        this.setTasks(tasks);
+        return task;
     }
 }
