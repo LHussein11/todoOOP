@@ -25,10 +25,10 @@ export class TodoList {
         localStorage.removeItem('items');
     }
     
-    remove(task) {
-        const tasks = JSON.parse(localStorage.getItem('items'));
-        const index = tasks.indexOf(task);
-        tasks.splice(index, 1);
+    remove(id) {
+        const tasks = 
+        JSON.parse(localStorage.getItem('items'))
+        .filter((task) => id !== task.id);
         localStorage.setItem('items', JSON.stringify(tasks));
     }
 }

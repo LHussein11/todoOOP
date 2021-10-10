@@ -31,19 +31,19 @@ export class Screen {
         this.btnDelete.addEventListener('click', () => this.notifySubscribers('click:btnDelete'));
         this.main.addEventListener('click', (event) => {
             if (event.target.classList.contains('fa-trash')) {
-                this.notifySubscribers('click:deleteSingle', event.target.previousElementSibling.innerText, event.target.parentElement);
+                this.notifySubscribers('click:deleteSingle', Number(event.target.parentElement.dataset.id), event.target.parentElement);
             }
         });
     }
 
     renderItem(task) {
-        const value = task ? task.value : this.input.value;
+        const { value, id } = task;
         if (!value.trim()) {
             return;
         }
 
         const element = `
-        <div class="item">
+        <div class="item" data-id="${id}">
           <p>${value}</p>
           <i class="fas fa-trash"></i>
         </div>
